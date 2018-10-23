@@ -18,10 +18,7 @@ import org.springframework.jms.support.converter.MessageType;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -65,6 +62,8 @@ public class WebsphereMqJmsApplication {
 	private static void dateConversion(){
 		String originalDate = "2018-10-29 00:55";
 		LocalDateTime localTime = LocalDateTime.parse(originalDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		Long instant1  = localTime.toEpochSecond(ZoneOffset.UTC);
+
 		System.out.println("The local time is " + localTime);
 
 		ZonedDateTime utcTime = localTime.atZone(ZoneOffset.UTC);
@@ -87,5 +86,13 @@ public class WebsphereMqJmsApplication {
 		bstTime = utcTime.withZoneSameInstant(ZoneId.of("Europe/London"));
 		dstOffset = ChronoUnit.MILLIS.between(utcTime.toLocalDateTime(), bstTime.toLocalDateTime());
 		System.out.println(dstOffset);
+        // new
+		//Instant instant = Instant.ofEpochSecond( 1_220_227_200L );
+
+		Instant instant = Instant.ofEpochSecond(instant1);
+		ZoneId zoneId = ZoneId.of( "Europe/London" );
+		ZonedDateTime zdt = ZonedDateTime.ofInstant( instant , zoneId );
+		System.out.println(" Date time is " + zdt);
+
 	}
 }
